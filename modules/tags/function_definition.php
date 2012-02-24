@@ -142,4 +142,15 @@ $FunctionList['latest_tags'] = array( 'name'            => 'latest_tags',
                                                                          'required' => false,
                                                                          'default'  => 0 ) ) );
 
+$FunctionList['treemenu'] = array( 
+    'name' => 'treemenu',
+    'operation_types' => array( 'read' ),
+    'call_method' => array(
+        'class' => 'eZTagsFunctionCollection',
+        'method' => 'fetchTagsTreeMenu'
+    ),
+    'parameter_type' => 'standard',
+    'parameters' => array()
+);
+
 ?>

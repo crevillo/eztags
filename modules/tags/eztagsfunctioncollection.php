@@ -127,6 +127,53 @@ class eZTagsFunctionCollection
         else
             return array( 'result' => false );
     }
+    
+    /**
+     * Fetches tags to build the treemenu
+     *
+     * @return array
+     */
+    static private function getChildrenForTag( $id )
+    {
+        $params = array( 'Depth' => 1 );
+        $children = array();
+        $tags = eZTagsObject::subTreeByTagID( $params, $id );
+
+        if( count( $tags ) > 0 )
+        {
+            foreach( $tags as $tag )
+            {
+                $children[] = array( 
+                    'title' => $tag->attribute( 'keyword' ),
+                    'isFolder' => eZTagsObject::subTreeCountByTagID( $params, $tag->attribute( 'id' ) ) ? true : false,
+                    'children' => self::getChildrenForTag( $tag->attribute( 'id' ) )
+                );
+            }
+        }
+
+        return $children;
+    }
+
+    /**
+     * Fetches tags to build the treemenu
+     *
+     * @return array
+     */
+    static public function fetchTagsTreeMenu()
+    {
+        $params = array( 'Depth' => 1 );
+        $tags = eZTagsObject::subTreeByTagID( $params, 0 );
+        $result = array();
+        $params = array();
+        $result = array( 
+            'title' => 'Top Level',
+            'isFolder' => eZTagsObject::subTreeCountByTagID( $params, 0 ) ? true : false,
+            'children' => self::getChildrenForTag( 0 )        
+        );
+
+        return array( 'result' => json_encode( $result ) );        
+    }
+     
 }
 
 ?>
