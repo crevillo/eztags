@@ -1,4 +1,4 @@
-        {if is_unset( $menu_persistence )}
+{if is_unset( $menu_persistence )}
     {def $menu_persistence = ezini('TreeMenu','MenuPersistence','eztags.ini')|eq('enabled')}
 {/if}
 <div id="tags-tree">
@@ -17,7 +17,7 @@
 <script type="text/javascript">
 $(function(){
     $("#tags-tree").dynatree({
-        persist: true,
+        persist: {$menu_persistence},
         minExpandLevel: 2,
         children: {/literal}{$tags}{literal},
         imagePath: '/',
