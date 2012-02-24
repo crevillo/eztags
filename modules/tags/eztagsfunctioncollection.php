@@ -127,13 +127,41 @@ class eZTagsFunctionCollection
         else
             return array( 'result' => false );
     }
+
+    private function lookupIcon( $tag )
+    {
+        $ini = eZINI::instance( 'eztags.ini' );
+        $iconMap = $ini->variable( 'Icons', 'IconMap' );
+        $returnValue = $ini->variable( 'Icons', 'Default' );
+
+        if ( array_key_exists( $tag->attribute( 'id' ), $iconMap ) && !empty( $iconMap[$tag->attribute( 'id' )] ) )
+        {
+            $returnValue = $iconMap[$tag->attribute( 'id' )];
+        }
+        else
+        {
+            $tempTag = $tag;
+            while ( $tempTag->attribute( 'parent_id' ) > 0 )
+            {
+                $tempTag = $tempTag->getParent();
+                if ( array_key_exists( $tempTag->attribute( 'id' ), $iconMap ) && !empty( $iconMap[$tempTag->attribute( 'id' )] ) )
+                {
+                    $returnValue = $iconMap[$tempTag->attribute( 'id' )];
+                    break;
+                }
+            }
+        }
+        
+        return eZURLOperator::eZImage( eZTemplate::factory(), 'tag_icons/small/' . $returnValue, '', true );
+    }
     
     /**
-     * Fetches tags to build the treemenu
+     * Fetches children for the given tag
      *
+     * @param int $id
      * @return array
      */
-    static private function getChildrenForTag( $id )
+    private function getChildrenForTag( $id )
     {
         $params = array( 'Depth' => 1 );
         $children = array();
@@ -143,9 +171,11 @@ class eZTagsFunctionCollection
         {
             foreach( $tags as $tag )
             {
+                $icon = $this->lookupIcon( $tag );
                 $children[] = array( 
                     'title' => $tag->attribute( 'keyword' ),
                     'isFolder' => eZTagsObject::subTreeCountByTagID( $params, $tag->attribute( 'id' ) ) ? true : false,
+                    'icon' => $this->lookupIcon( $tag ),
                     'children' => self::getChildrenForTag( $tag->attribute( 'id' ) )
                 );
             }
@@ -157,9 +187,9 @@ class eZTagsFunctionCollection
     /**
      * Fetches tags to build the treemenu
      *
-     * @return array
+     * @return json object
      */
-    static public function fetchTagsTreeMenu()
+    public function fetchTagsTreeMenu()
     {
         $params = array( 'Depth' => 1 );
         $tags = eZTagsObject::subTreeByTagID( $params, 0 );
@@ -168,7 +198,7 @@ class eZTagsFunctionCollection
         $result = array( 
             'title' => 'Top Level',
             'isFolder' => eZTagsObject::subTreeCountByTagID( $params, 0 ) ? true : false,
-            'children' => self::getChildrenForTag( 0 )        
+            'children' => $this->getChildrenForTag( 0 ),   
         );
 
         return array( 'result' => json_encode( $result ) );        

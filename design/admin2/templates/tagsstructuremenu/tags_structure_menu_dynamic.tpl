@@ -19,7 +19,9 @@ $(function(){
     $("#tags-tree").dynatree({
         persist: true,
         minExpandLevel: 2,
-        children: {/literal}{$tags}{literal}
+        children: {/literal}{$tags}{literal},
+        imagePath: '/',
+        icon: null
     });
 
 });
