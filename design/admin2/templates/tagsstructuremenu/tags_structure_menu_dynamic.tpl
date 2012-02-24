@@ -1,4 +1,4 @@
-{if is_unset( $menu_persistence )}
+        {if is_unset( $menu_persistence )}
     {def $menu_persistence = ezini('TreeMenu','MenuPersistence','eztags.ini')|eq('enabled')}
 {/if}
 <div id="tags-tree">
@@ -21,7 +21,13 @@ $(function(){
         minExpandLevel: 2,
         children: {/literal}{$tags}{literal},
         imagePath: '/',
-        icon: null
+        icon: null,
+        clickFolderMode: 1,
+        onActivate: function(node) { 
+             if( node.data.href ) {
+                window.location.href = node.data.href; 
+             }
+        }
     });
 
 });

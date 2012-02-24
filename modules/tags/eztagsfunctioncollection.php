@@ -172,9 +172,12 @@ class eZTagsFunctionCollection
             foreach( $tags as $tag )
             {
                 $icon = $this->lookupIcon( $tag );
+                $uri = 'tags/id/' . $tag->attribute( 'id' );
+                eZURI::transformURI( $uri, false );
                 $children[] = array( 
                     'title' => $tag->attribute( 'keyword' ),
                     'isFolder' => eZTagsObject::subTreeCountByTagID( $params, $tag->attribute( 'id' ) ) ? true : false,
+                    'href' => $uri,
                     'icon' => $this->lookupIcon( $tag ),
                     'children' => self::getChildrenForTag( $tag->attribute( 'id' ) )
                 );
@@ -200,7 +203,6 @@ class eZTagsFunctionCollection
             'isFolder' => eZTagsObject::subTreeCountByTagID( $params, 0 ) ? true : false,
             'children' => $this->getChildrenForTag( 0 ),   
         );
-
         return array( 'result' => json_encode( $result ) );        
     }
      
