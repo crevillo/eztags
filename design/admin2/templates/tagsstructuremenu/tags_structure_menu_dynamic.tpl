@@ -2,18 +2,8 @@
     {def $menu_persistence = ezini('TreeMenu','MenuPersistence','eztags.ini')|eq('enabled')}
 {/if}
 <div id="tags-tree">
-<ul>
-    <li><a href="">Top Level</a>
-    {def $tags = fetch( 'tags', 'list', hash( 'parent_tag_id', 0 ))}
-    {if $tags|count|gt(0)}
-    <ul>
-    {foreach $tags as $tag}
-        <li><a href={concat( '/tags/id/', $tag.id )|ezurl}>{$tag.keyword}</a></li>
-    {/foreach}
-    </ul>
-    {/if}
-    </li>
-</ul>
+{def $tags = fetch( 'tags', 'treemenu', hash() )}
+
 </div>
 
 
@@ -28,7 +18,8 @@
 $(function(){
     $("#tags-tree").dynatree({
         persist: true,
-        minExpandLevel: 2
+        minExpandLevel: 2,
+        children: {/literal}{$tags}{literal}
     });
 
 });
