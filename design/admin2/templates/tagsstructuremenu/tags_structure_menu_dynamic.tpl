@@ -26,7 +26,11 @@
 {literal}
 <script type="text/javascript">
 $(function(){
-    $("#tags-tree").dynatree();
+    $("#tags-tree").dynatree({
+        persist: true,
+        minExpandLevel: 2
+    });
+
 });
 </script>
 {/literal}
