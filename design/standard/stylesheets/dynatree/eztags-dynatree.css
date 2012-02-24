@@ -1,9 +1,12 @@
 /**
  * css file to make dynatree looks even better with eztags
  */
+#tags-tree {
+    min-height:250px;
+}
+
 #tags-tree ul {
-    margin-left: 0;
-    min-height:200px;
+    margin-left: 0; 
 }
 
 #tags-tree span.dynatree-icon {
