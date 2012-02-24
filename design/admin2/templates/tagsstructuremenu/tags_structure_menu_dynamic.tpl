@@ -21,7 +21,8 @@
                           'dynatree/jquery-ui.custom.min.js', 
                           'dynatree/jquery.cookie.js', 
                           'dynatree/jquery.dynatree.min.js' ) )}
-{ezcss_require( 'dynatree/skin/ui.dynatree.css' )}
+{ezcss_require( array( 'dynatree/skin/ui.dynatree.css', 
+                       'dynatree/eztags-dynatree.css' ))}
 {literal}
 <script type="text/javascript">
 $(function(){
